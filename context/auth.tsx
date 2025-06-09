@@ -68,11 +68,13 @@ function useProvideAuth() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (fbUser) => {
+      setLoading(true);
       setFirebaseUser(fbUser);
       if (!fbUser) {
         setGoogleUser(null);
         setAuthToken(null);
       }
+      setLoading(false);
     });
 
     return () => unsubscribe();
@@ -99,6 +101,7 @@ function useProvideAuth() {
     try {
       const credential = await trySignInWithGoogle();
       await signInWithCredential(auth, credential);
+      setLoading(true);
     } catch (error) {
       if (isErrorWithCode(error)) {
         console.error('Google Sign-In Error:', error.code, error.message);
