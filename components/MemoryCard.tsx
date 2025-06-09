@@ -1,15 +1,15 @@
 import { format } from 'date-fns';
+import { useRouter } from 'expo-router';
 import { Pressable, StyleSheet, Text } from 'react-native';
 
 import { Memory } from '@/lib/sqlite/memories';
-import { useRouter } from 'expo-router';
 
 export default function MemoryCard({ data }: { data: Memory }) {
   const router = useRouter();
 
   const handlePress = () => {
     router.push({
-      pathname: '/(protected)/memories/[id]',
+      pathname: '/(protected)/memories/[id]/notes',
       params: {
         id: data.id,
         payload: JSON.stringify(data),
