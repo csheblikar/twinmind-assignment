@@ -24,5 +24,5 @@ export async function insertMemory(db: SQLiteDatabase, memory: Omit<Memory, 'id'
   const sql = `INSERT INTO memories (id, title, calendarId, location, createdAt) VALUES (?, ?, ?, ?, ?)`;
   const params = [id, memory.title, memory.calendarId || null, memory.location || null, createdAt];
   await db.runAsync(sql, params);
-  return id;
+  return { id, createdAt: new Date(createdAt), ...memory };
 }

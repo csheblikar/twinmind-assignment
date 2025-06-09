@@ -20,13 +20,13 @@ export default function CaptureButton({
   const router = useRouter();
 
   const handlePress = async () => {
-    const id = await insertMemory(db, {
+    const data = await insertMemory(db, {
       title: payload?.title || 'Untitled',
       calendarId: payload?.calendarId,
     });
     router.push({
       pathname: '/(protected)/memories/[id]',
-      params: { id, capture: 'true' },
+      params: { id: data.id, capture: 'true', payload: JSON.stringify(data) },
     });
   };
 

@@ -8,16 +8,21 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import MaterialTopTabs from '@/components/MaterialTopTabs';
 import { useTopAppBar } from '@/context/top-app-bar';
 import { useRecordingPermissions } from '@/hooks/audio';
+import { Memory } from '@/lib/sqlite/memories';
 import theme from '@/lib/theme';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { format } from 'date-fns';
 
 type TSearchParams = {
   id: string;
   capture?: 'true';
+  payload: string;
 };
 
 export default function MemoryLayout() {
-  const { id, capture } = useLocalSearchParams<TSearchParams>();
+  const { id, capture, payload } = useLocalSearchParams<TSearchParams>();
+
+  const data = JSON.parse(payload) as Memory;
 
   const [status, requestPermission] = useRecordingPermissions();
   const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
@@ -109,6 +114,16 @@ export default function MemoryLayout() {
 
   return (
     <View style={{ flex: 1 }}>
+      <View style={{ padding: 16 }}>
+        <Text style={{ fontSize: 24, fontWeight: '500', color: theme.colors.primary }}>
+          {data?.title}
+        </Text>
+        <Text style={{ fontSize: 14, color: '#666' }}>
+          {format(data.createdAt, 'MMMM d, yyyy')} • {format(data.createdAt, 'h:mm a')}
+          {data?.location && ` • ${data?.location}`}
+        </Text>
+      </View>
+
       <MaterialTopTabs>
         <MaterialTopTabs.Screen name="index" options={{ title: 'Questions' }} />
         <MaterialTopTabs.Screen name="notes" options={{ title: 'Notes' }} />

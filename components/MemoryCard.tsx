@@ -1,15 +1,28 @@
 import { format } from 'date-fns';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text } from 'react-native';
 
 import { Memory } from '@/lib/sqlite/memories';
+import { useRouter } from 'expo-router';
 
 export default function MemoryCard({ data }: { data: Memory }) {
+  const router = useRouter();
+
+  const handlePress = () => {
+    router.push({
+      pathname: '/(protected)/memories/[id]',
+      params: {
+        id: data.id,
+        payload: JSON.stringify(data),
+      },
+    });
+  };
+
   return (
-    <View style={styles.container}>
+    <Pressable onPress={handlePress} style={styles.container}>
       <Text style={styles.subtext}>{format(data.createdAt, 'hh:mm a')}</Text>
       <Text style={styles.titleText}>{data.title}</Text>
       <Text style={styles.subtext}>0m</Text>
-    </View>
+    </Pressable>
   );
 }
 
