@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import CaptureButton from '@/components/CaptureButton';
 import MaterialTopTabs from '@/components/MaterialTopTabs';
+import ProgressCard from '@/components/ProgressCard';
 import { useTopAppBar } from '@/context/top-app-bar';
 import theme from '@/lib/theme';
 
@@ -23,6 +24,10 @@ export default function DashboardTabsLayout() {
 
   return (
     <View style={{ flex: 1 }}>
+      <View style={{ padding: 16 }}>
+        <ProgressCard />
+      </View>
+
       <MaterialTopTabs>
         <MaterialTopTabs.Screen name="index" options={{ title: 'Memories' }} />
         <MaterialTopTabs.Screen name="calendar" options={{ title: 'Calendar' }} />
