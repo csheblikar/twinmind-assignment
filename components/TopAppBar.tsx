@@ -5,10 +5,11 @@ import { Image, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'reac
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useAuth } from '@/context/auth';
+import { useTopAppBarOptions } from '@/context/top-app-bar';
 import theme from '@/lib/theme';
 
 export default function TopAppBar({ back, navigation, options }: NativeStackHeaderProps) {
-  // const topAppBarOptions = useTopAppBarOptions();
+  const topAppBarOptions = useTopAppBarOptions();
   const { firebaseUser } = useAuth(); // TODO: get the user's pro status here
   const [isPro] = useState(true); // Placeholder for pro status, replace with actual logic
 
@@ -40,28 +41,34 @@ export default function TopAppBar({ back, navigation, options }: NativeStackHead
         </TouchableOpacity>
 
         <View style={styles.titleContainer}>
-          <Text
-            style={[
-              options.headerTitleStyle,
-              styles.title,
-              !back && { color: theme.colors.primary },
-            ]}
-            numberOfLines={1}
-          >
-            {back ? options.title : 'TwinMind'}
-          </Text>
-          {!back && isPro && (
-            <View style={styles.badge}>
-              <Text style={styles.badgeText}>Pro</Text>
-            </View>
+          {typeof topAppBarOptions.title === 'function' ? (
+            <topAppBarOptions.title />
+          ) : (
+            <>
+              <Text
+                style={[
+                  options.headerTitleStyle,
+                  styles.title,
+                  !back && { color: theme.colors.primary },
+                ]}
+                numberOfLines={1}
+              >
+                {topAppBarOptions.title || (back ? options.title : 'TwinMind')}
+              </Text>
+              {!back && isPro && (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>Pro</Text>
+                </View>
+              )}
+            </>
           )}
         </View>
 
-        {/* {topAppBarOptions.actionButton && (
+        {topAppBarOptions.actionButton && (
           <View style={[styles.actionButton, styles.right]}>
             <topAppBarOptions.actionButton />
           </View>
-        )} */}
+        )}
       </View>
     </SafeAreaView>
   );

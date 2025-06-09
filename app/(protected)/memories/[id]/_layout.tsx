@@ -1,12 +1,15 @@
 import { RecordingPresets, useAudioRecorder } from 'expo-audio';
 import * as FileSystem from 'expo-file-system';
-import { useLocalSearchParams, useNavigation } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { Alert, Linking, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import MaterialTopTabs from '@/components/MaterialTopTabs';
+import { useTopAppBar } from '@/context/top-app-bar';
 import { useRecordingPermissions } from '@/hooks/audio';
+import theme from '@/lib/theme';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 type TSearchParams = {
   id: string;
@@ -16,12 +19,36 @@ type TSearchParams = {
 export default function MemoryLayout() {
   const { id, capture } = useLocalSearchParams<TSearchParams>();
 
-  const navigation = useNavigation();
-
   const [status, requestPermission] = useRecordingPermissions();
   const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
 
   const [isRecording, setIsRecording] = useState(false);
+
+  const shouldRecord = capture === 'true' && status?.granted;
+
+  const renderTitle = useCallback(
+    () => (
+      <View>
+        <Text>00:00</Text>
+      </View>
+    ),
+    []
+  );
+
+  const renderActionButton = useCallback(
+    () =>
+      shouldRecord ? (
+        <TouchableOpacity>
+          <MaterialIcons name="share" size={24} color={theme.colors.primary} />
+        </TouchableOpacity>
+      ) : null,
+    [shouldRecord]
+  );
+
+  useTopAppBar({
+    title: renderTitle,
+    actionButton: renderActionButton,
+  });
 
   const startRecording = useCallback(async () => {
     await audioRecorder.prepareToRecordAsync();
@@ -48,12 +75,6 @@ export default function MemoryLayout() {
     await FileSystem.moveAsync({ from: uri, to: newUri });
     console.log('Recording stopped and saved to:', newUri);
   }, [audioRecorder]);
-
-  useEffect(() => {
-    navigation.setOptions({
-      title: 'Untitled',
-    });
-  }, [navigation]);
 
   useEffect(() => {
     if (capture !== 'true') return;
