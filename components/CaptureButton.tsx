@@ -1,12 +1,14 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { randomUUID } from 'expo-crypto';
 import { useRouter } from 'expo-router';
+import { useSQLiteContext } from 'expo-sqlite';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+
+import { insertMemory, Memory } from '@/lib/sqlite/memories';
 
 type CaptureButtonProps = {
   hideIcon?: boolean;
   small?: boolean;
-  payload?: Record<string, string>;
+  payload?: Omit<Memory, 'id' | 'createdAt'>;
 };
 
 export default function CaptureButton({
@@ -14,10 +16,14 @@ export default function CaptureButton({
   small = false,
   payload,
 }: CaptureButtonProps) {
+  const db = useSQLiteContext();
   const router = useRouter();
 
   const handlePress = async () => {
-    const id = randomUUID();
+    const id = await insertMemory(db, {
+      title: payload?.title || 'Untitled',
+      calendarId: payload?.calendarId,
+    });
     router.push({
       pathname: '/(protected)/memories/[id]',
       params: { id, capture: 'true' },
