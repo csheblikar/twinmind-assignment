@@ -1,13 +1,17 @@
 import { Stack } from 'expo-router';
 
 import { AuthProvider } from '@/context/auth';
-import { StatusBar } from 'react-native';
+import theme from '@/lib/theme';
 
 export default function RootLayout() {
   return (
     <AuthProvider>
-      <StatusBar barStyle="dark-content" />
-      <Stack screenOptions={{ headerShown: false }} />
+      <Stack
+        screenOptions={{
+          contentStyle: { backgroundColor: theme.colors.background },
+          headerShown: false,
+        }}
+      />
     </AuthProvider>
   );
 }

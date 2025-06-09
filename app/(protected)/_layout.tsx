@@ -1,6 +1,9 @@
-import { useAuth } from '@/context/auth';
 import { Redirect, Stack } from 'expo-router';
 import { ActivityIndicator, View } from 'react-native';
+
+import TopAppBar from '@/components/TopAppBar';
+import { useAuth } from '@/context/auth';
+import theme from '@/lib/theme';
 
 export default function ProtectedLayout() {
   const { firebaseUser, loading } = useAuth();
@@ -18,8 +21,27 @@ export default function ProtectedLayout() {
   }
 
   return (
-    <Stack screenOptions={{ headerShadowVisible: false }}>
+    <Stack
+      screenOptions={{
+        contentStyle: { backgroundColor: theme.colors.background },
+        headerShadowVisible: false,
+        headerStyle: {
+          backgroundColor: theme.colors.background,
+        },
+        headerTitleStyle: {
+          fontSize: 18,
+          fontWeight: '500',
+        },
+        headerBackTitleStyle: {
+          fontSize: 18,
+        },
+        header(props) {
+          return <TopAppBar {...props} />;
+        },
+      }}
+    >
       <Stack.Screen name="(tabs)" options={{ title: 'Home' }} />
+      <Stack.Screen name="settings" options={{ title: 'Settings' }} />
     </Stack>
   );
 }
