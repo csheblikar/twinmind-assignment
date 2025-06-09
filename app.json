@@ -1,16 +1,17 @@
 {
   "expo": {
-    "name": "twinmind-clone",
+    "name": "TwinMind",
     "slug": "twinmind-clone",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "twinmindclone",
+    "scheme": "twinmind",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.csheblikar.twinmindclone"
+      "bundleIdentifier": "com.csheblikar.twinmind",
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
@@ -18,7 +19,8 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.csheblikar.twinmindclone"
+      "package": "com.csheblikar.twinmind",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "bundler": "metro",
@@ -35,7 +37,19 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth",
+      "@react-native-google-signin/google-signin",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ],
+      "expo-audio"
     ],
     "experiments": {
       "typedRoutes": true
